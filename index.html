@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MiAngularApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="Quarantine2020">
+    <meta property="og:description" content="An Epidemics simulator.">
+    <meta property="og:image" content="https://rafaelaznar.github.io/thumbnail.jpg">
+    <meta property="og:url" content="https://rafaelaznar.github.io/">
+    <meta property="og:site_name" content="Quarantine2020">
+    <meta name="google-site-verification" content="5F3pm6LuOE_YBVg4SnwJf7CeuTiAKeKPV9lcS0VDeic" />
+    <meta name="author" content="Rafael Aznar" />
+    <meta name="description" content="Epidemics simulator" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <script src="angular.min.js"></script>
+    <script src="chart.min.js"></script>
+    <script src="angular-chart.min.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="script.js"></script>
+    <style>
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1200px;
+            }
+        }
+    </style>
+    <title>Epidemics simulator</title>
+    <link rel="shortcut icon" type="image/png" href="coronavirus.png" />
+</head>
+
+<body ng-controller="MiControlador" style="margin-top: 20px;">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 text-center">
+                <img src="coronavirus.png" alt="coronavirus" width="72" height="72">
+                <h2>{{txtTitle[language]}}</h2>
+                <p>{{txtIntro[language]}}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 text-center">
+                <canvas id="canvas" class="center borderedCanvas" width="300" height="300" style="border: 1px solid black;  padding-left: 0;
+                padding-right: 0;margin-left: auto;margin-right: auto;display: block;"></canvas>
+            </div>
+        </div>
+        <div class="row" style="margin-top:25px">
+
+            <div class="col-xl-4 col-lg-4 col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels"
+                            chart-series="series" chart-options="options" chart-dataset-override="datasetOverride"
+                            chart-click="onClick" height="230">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-12">
+                <div class="row">
+                    <div class="col-xl-12 text-center">
+                        <div class="alert alert-secondary" role="alert">
+                            <h2 ng-show="state=='initial'" class="text-center">{{txtReady[language]}}</h2>
+                            <h2 class="text-center" ng-hide="state=='initial'">{{txtDay[language]}}: {{counter}}</h2>
+                        </div>
+
+                        <button ng-show="state=='initial'" type="button" class="btn btn-success btn-lg center-block"
+                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtStart[language]}} </button>
+                        <button ng-show="state=='paused'" type="button" class="btn btn-success btn-lg center-block"
+                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtContinue[language]}} </button>
+                        <button ng-show="state=='processing'" type="button" class="btn btn-primary btn-lg center-block"
+                            id="stop" ng-click="stop()"> <img src="pause.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtPause[language]}} </button>
+                        <button ng-show="state=='paused'" type="button" class="btn btn-danger btn-lg center-block"
+                            id="reset" ng-click="reset()"> <img src="refresh-ccw.svg" fill="white" alt="" width="20"
+                                style="filter: invert(1);"> {{txtReset[language]}} </button>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-12 text-center">
+                        <div style="margin-top:10px">
+                            <label> <input type="radio" ng-model="language" ng-value="0" ng-change="languageChange()">
+                                English
+                            </label>
+                            <label> <input type="radio" ng-model="language" ng-value="1" ng-change="languageChange()">
+                                Español
+                            </label>
+                            <label> <input type="radio" ng-model="language" ng-value="2" ng-change="languageChange()">
+                                Valencià/Cat.
+                            </label>
+                        </div>
+                        <div class="custom-control custom-checkbox" ng-show="state=='initial'" style="margin-top:10px">
+                            <input type="checkbox" class="custom-control-input" id="groupedInfectedPopulation"
+                                ng-change="resetInit()" ng-model="groupedInfectedPopulation">
+                            <label class="custom-control-label"
+                                for="groupedInfectedPopulation">{{txtGroup[language]}}</label>
+                        </div>
+                        <div class="custom-control custom-checkbox" style="margin-top:10px">
+                            <input type="checkbox" class="custom-control-input" id="checkInmunity"
+                                ng-model="checkInmunity">
+                            <label class="custom-control-label" for="checkInmunity">{{txtImmunity[language]}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-12 text-center">
+                <div class="row">
+
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr style="color:rgb(10, 110, 10)">
+                                <th scope="row">
+                                    <h6>{{txtHealthy[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="healthy">{{healthy| number}}</h6>
+                                </td>
+                                <td class="text-right">
+                                    <h6 id="healthy">{{progressHealthy|number:2}}%</h6>
+                                </td>
+                                <td class="text-right" style="width: 60%">
+                                    <div class="progress">
+                                        <div id="progressHealthy" class="progress-bar bg-success"
+                                            ng-style="{'width':progressHealthy + '%'}">
+                                            <span>{{progressHealthy|number:2}}%
+                                        </div>
+                                </td>
+                            </tr>
+                            <tr style="color:rgb(161, 1, 1)">
+                                <th scope="row">
+                                    <h6>{{txtSick[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="sick">{{sick| number}}</h6>
+                                </td>
+                                <td class="text-right">
+                                    <h6 id="sick">{{progressSick|number:2}}%</h6>
+                                </td>
+                                <td class="text-right">
+                                    <div class="progress">
+                                        <div id="progressSick" class="progress-bar bg-danger"
+                                            ng-style="{'width':progressSick + '%'}">
+                                            <span>{{progressSick|number:2}}%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="color:rgb(0, 153, 255)">
+                                <th scope="row">
+                                    <h6>{{txtImmune[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="inmune">{{inmune| number}}</h6>
+                                </td>
+                                <td class="text-right">
+                                    <h6 id="inmune">{{progressInmune|number:2}}%</h6>
+                                </td>
+                                <td class="text-right" style="width: 60%">
+                                    <div class="progress">
+                                        <div id="progressInmune" class="progress-bar bg-info"
+                                            ng-style="{'width':progressInmune + '%'}">
+                                            <span>{{progressInmune|number:2}}%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="color:rgb(0, 0, 0)">
+                                <th scope="row">
+                                    <h6>{{txtDeath[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="dead">{{dead| number}}</h6>
+                                </td>
+                                <td class="text-right">
+                                    <h6 id="dead">{{progressDead|number:2}}%</h6>
+                                </td>
+                                <td class="text-right" style="width: 60%">
+                                    <div class="progress">
+                                        <div id="progressDead" class="progress-bar bg-dark"
+                                            ng-style="{'width':progressDead + '%'}">
+                                            <span>{{progressDead|number:2}}%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="color:rgb(0, 8, 119)">
+                                <th scope="row">
+                                    <h6>TOTAL</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="total">{{total| number}}</h6>
+                                </td>
+                                <td class="text-right" colspan="2">
+                                    <div class="progress">
+                                        <div id="progressHealthy" class="progress-bar bg-success"
+                                            ng-style="{'width':progressHealthy + '%'}">
+                                            <span>{{progressHealthy|number:2}}%</span>
+                                        </div>
+                                        <div id="progressInmune" class="progress-bar bg-info"
+                                            ng-style="{'width':progressInmune + '%'}">
+                                            <span>{{progressInmune|number:2}}%</span>
+                                        </div>
+                                        <div id="progressSick" class="progress-bar bg-danger"
+                                            ng-style="{'width':progressSick + '%'}">
+                                            <span>{{progressSick|number:2}}%</span>
+                                        </div>
+                                        <div id="progressDead" class="progress-bar bg-dark"
+                                            ng-style="{'width':progressDead + '%'}">
+                                            <span>{{progressDead|number:2}}%</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                </trstyle="color:red">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+
+            <div class="col-md-6 text-center">
+                <div class="col-md-12">
+                    {{txtImmunity[language]}}: <span>{{rangeImmunity}} {{txtDays[language]}}</span>
+                    <input type="range" ng-disabled="checkInmunity" class="custom-range" min="0" max="50" step="1"
+                        ng-model="rangeImmunity">
+                </div>
+
+                <div class="col-md-12" ng-show="state=='initial'">
+                    {{txtInitial[language]}}: <span id="txtPoblacionInicial">{{rangeInitialInfectedPopulation}}</span>
+                    <input type="range" class="custom-range" id="rangeInitialInfectedPopulation" min="0" max="100"
+                        step="1" ng-model="rangeInitialInfectedPopulation" ng-change="reset()">
+                </div>
+                <div class="col-md-12">
+                    {{txtRecuperation[language]}}: <span id="txtRecuperation">{{rangeRecuperation}}
+                        {{txtDays[language]}}</span>
+                    <input type="range" class="custom-range" id="rangeRecuperation" min="0" max="20" step="1"
+                        ng-model="rangeRecuperation">
+                </div>
+                <div class="col-md-12">
+                    {{txtDeathRate[language]}}: <span>{{rangeMortality}}%</span>
+                    <input type="range" class="custom-range" min="0" max="60" step="0.1" ng-model="rangeMortality">
+                </div>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <div class="col-md-12">
+                    {{txtNeighborhood[language]}}: <span>{{rangeNeighborhood}}</span>
+                    <input type="range" class="custom-range" min="0" max="5" step="1" ng-model="rangeNeighborhood">
+                </div>
+                <div class="col-md-12">
+                    {{txtContacts[language]}}: <span id="txtContacts">{{rangeContacts}}</span>
+                    <input type="range" class="custom-range" id="rangeContacts" min="0" max="10" step="1"
+                        ng-model="rangeContacts">
+                </div>
+                <div class="col-md-12">
+                    {{txtLoad[language]}}: <span>{{rangeContaminationThreshold}}</span>
+                    <input type="range" class="custom-range" min="0" max="50" step="1"
+                        ng-model="rangeContaminationThreshold">
+                </div>
+                <div class="col-md-12" ng-show="state=='initial'">
+                    {{txtDay[language]}}: <span>{{rangeTickSeconds}}</span>
+                    <input type="range" class="custom-range" min="1" max="5" step="1" ng-model="rangeTickSeconds">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top:50px">
+            <div class="col-md-12">
+                <div class="col-md-12 text-center">
+                    <button type="button" class="btn btn-info btn-lg text-center" data-toggle="modal"
+                        data-target="#exampleModal" style="margin-top:10px"> <img src="user.svg" fill="white" alt=""
+                            width="25" style="filter: invert(1);">
+                        {{txtAbout[language]}} </button>
+                    <div style="margin-top:30px">
+                        <button type="button" class="btn btn-primary btn-sm  text-center" ng-show="canShare()"
+                            ng-click="share()"> <img src="share.svg" fill="white" alt="" width="15"
+                                style="filter: invert(1);"> {{txtShare[language]}} </button>
+                        <p ng-show="!canShare()"> <img src="share.svg" fill="white" alt="" width="15">
+                            {{txtPleaseShare[language]}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row"
+            style="margin-bottom:40px;margin-top:60px;font-size: 80%;text-align:center;font-family:Noto,Sans,serif,Times;font-weight:600;font-stretch:expanded; color: grey;">
+            <div class="col-md-12">
+                {{txtFooter1[language]}}<br />
+                {{txtFooter2[language]}}<br />
+                &copy; {{txtFooter3[language]}}
+            </div>
+        </div>
+    </div>
+
+    <!--Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{txtTitle[language]}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-xl-12 col-lg-12 col-md-12 text-center">
+                        <img src="coronavirus.png" alt="coronavirus" width="72" height="72">
+                        <p style="margin-top:30px">{{txtModal1[language]}}</p>
+                        <p style="text-align: justify">{{txtModal2[language]}}</p>
+                        <p>{{txtModal3[language]}} <a
+                                href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a></p>
+                        <p>{{txtModal4[language]}}</p>
+                        <p>{{txtModal5[language]}} <a
+                                href="https://github.com/rafaelaznar/rafaelaznar.github.io.git">GITHUB</a>
+                        </p>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{txtClose[language]}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
