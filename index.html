@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta property="og:title" content="Quarantine2020">
     <meta property="og:description" content="An Epidemics simulator.">
-    <meta property="og:image" content="https://rafaelaznar.github.io/thumbnail.jpg">
-    <meta property="og:url" content="https://rafaelaznar.github.io/">
+    <meta property="og:image" content="https://quarantine2020.netlify.com/thumbnail.jpg">
+    <meta property="og:url" content="https://quarantine2020.netlify.com/">
     <meta property="og:site_name" content="Quarantine2020">
     <meta name="google-site-verification" content="5F3pm6LuOE_YBVg4SnwJf7CeuTiAKeKPV9lcS0VDeic" />
     <meta name="author" content="Rafael Aznar" />
@@ -43,74 +43,45 @@
         </div>
 
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 text-center">
-                <canvas id="canvas" class="center borderedCanvas" width="300" height="300" style="border: 1px solid black;  padding-left: 0;
-                padding-right: 0;margin-left: auto;margin-right: auto;display: block;"></canvas>
-            </div>
-        </div>
-        <div class="row" style="margin-top:25px">
-
             <div class="col-xl-4 col-lg-4 col-md-12">
                 <div class="row">
                     <div class="col-md-12">
-                        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels"
-                            chart-series="series" chart-options="options" chart-dataset-override="datasetOverride"
-                            chart-click="onClick" height="230">
+                        <canvas id="populationChart" class="chart chart-line" chart-data="populationChartData"
+                            chart-labels="populationChartLabels" chart-series="txtPopulationChartSeries[language]"
+                            chart-options="chartOptions" chart-dataset-override="datasetOverride" chart-click="onClick"
+                            height="230">
                         </canvas>
                     </div>
                 </div>
             </div>
-
+            <div class="col-xl-4 col-lg-4 col-md-12 text-center" data-placement="top"
+                ng-attr-title="{{txtFlatland[language]}}">
+                <canvas id="canvas" class="center borderedCanvas" width="300" height="300" style="border: 1px solid black;  padding-left: 0;
+                padding-right: 0;margin-left: auto;margin-right: auto;display: block;"></canvas>
+            </div>
             <div class="col-xl-4 col-lg-4 col-md-12">
                 <div class="row">
-                    <div class="col-xl-12 text-center">
-                        <div class="alert alert-secondary" role="alert">
-                            <h2 ng-show="state=='initial'" class="text-center">{{txtReady[language]}}</h2>
-                            <h2 class="text-center" ng-hide="state=='initial'">{{txtDay[language]}}: {{counter}}</h2>
-                        </div>
-
-                        <button ng-show="state=='initial'" type="button" class="btn btn-success btn-lg center-block"
-                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
-                                style="filter: invert(1);"> {{txtStart[language]}} </button>
-                        <button ng-show="state=='paused'" type="button" class="btn btn-success btn-lg center-block"
-                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
-                                style="filter: invert(1);"> {{txtContinue[language]}} </button>
-                        <button ng-show="state=='processing'" type="button" class="btn btn-primary btn-lg center-block"
-                            id="stop" ng-click="stop()"> <img src="pause.svg" fill="white" alt="" width="25"
-                                style="filter: invert(1);"> {{txtPause[language]}} </button>
-                        <button ng-show="state=='paused'" type="button" class="btn btn-danger btn-lg center-block"
-                            id="reset" ng-click="reset()"> <img src="refresh-ccw.svg" fill="white" alt="" width="20"
-                                style="filter: invert(1);"> {{txtReset[language]}} </button>
+                    <div class="col-md-12">
+                        <canvas id="incidenceChart" class="chart chart-line" chart-data="incidenceChartData"
+                            chart-labels="incidenceChartLabels" chart-series="txtIncidenceChartSeries[language]"
+                            chart-options="chartOptions" chart-dataset-override="datasetOverride" chart-click="onClick"
+                            height="115">
+                        </canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <canvas id="prevalenceChart" class="chart chart-line" chart-data="prevalenceChartData"
+                            chart-labels="prevalenceChartLabels" chart-series="txtPrevalenceChartSeries[language]"
+                            chart-options="chartOptions" chart-dataset-override="datasetOverride" chart-click="onClick"
+                            height="115">
+                        </canvas>
                     </div>
                 </div>
 
-                <div class="row" style="margin-top:10px">
-                    <div class="col-md-12 text-center">
-                        <div style="margin-top:10px">
-                            <label> <input type="radio" ng-model="language" ng-value="0" ng-change="languageChange()">
-                                English
-                            </label>
-                            <label> <input type="radio" ng-model="language" ng-value="1" ng-change="languageChange()">
-                                Español
-                            </label>
-                            <label> <input type="radio" ng-model="language" ng-value="2" ng-change="languageChange()">
-                                Valencià/Cat.
-                            </label>
-                        </div>
-                        <div class="custom-control custom-checkbox" ng-show="state=='initial'" style="margin-top:10px">
-                            <input type="checkbox" class="custom-control-input" id="groupedInfectedPopulation"
-                                ng-change="resetInit()" ng-model="groupedInfectedPopulation">
-                            <label class="custom-control-label"
-                                for="groupedInfectedPopulation">{{txtGroup[language]}}</label>
-                        </div>
-                        <div class="custom-control custom-checkbox" style="margin-top:10px">
-                            <input type="checkbox" class="custom-control-input" id="checkInmunity"
-                                ng-model="checkInmunity">
-                            <label class="custom-control-label" for="checkInmunity">{{txtImmunity[language]}}</label>
-                        </div>
-                    </div>
-                </div>
             </div>
+        </div>
+        <div class="row" style="margin-top:25px">
 
             <div class="col-xl-4 col-lg-4 col-md-12 text-center">
                 <div class="row">
@@ -133,6 +104,26 @@
                                             ng-style="{'width':progressHealthy + '%'}">
                                             <span>{{progressHealthy|number:2}}%
                                         </div>
+                                </td>
+                            </tr>
+                            <tr style="color:rgb(255, 0, 255)">
+                                <th scope="row">
+                                    <h6>{{txtIncubating[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6 id="sick">{{incubating| number}}</h6>
+                                </td>
+                                <td class="text-right">
+                                    <h6 id="sick">{{progressIncubating|number:2}}%</h6>
+                                </td>
+                                <td class="text-right">
+                                    <div class="progress">
+                                        <div id="progressIncubating" class="progress-bar"
+                                            ng-style="{'width':progressIncubating + '%'}"
+                                            style="background-color:rgb(255, 0, 255)">
+                                            <span>{{progressIncubating|number:2}}%</span>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr style="color:rgb(161, 1, 1)">
@@ -208,13 +199,18 @@
                                             ng-style="{'width':progressHealthy + '%'}">
                                             <span>{{progressHealthy|number:2}}%</span>
                                         </div>
-                                        <div id="progressInmune" class="progress-bar bg-info"
-                                            ng-style="{'width':progressInmune + '%'}">
-                                            <span>{{progressInmune|number:2}}%</span>
+                                        <div id="progressIncubating" class="progress-bar"
+                                            ng-style="{'width':progressIncubating + '%'}"
+                                            style="background-color:rgb(255, 0, 255)">
+                                            <span>{{progressIncubating|number:2}}%</span>
                                         </div>
                                         <div id="progressSick" class="progress-bar bg-danger"
                                             ng-style="{'width':progressSick + '%'}">
                                             <span>{{progressSick|number:2}}%</span>
+                                        </div>
+                                        <div id="progressInmune" class="progress-bar bg-info"
+                                            ng-style="{'width':progressInmune + '%'}">
+                                            <span>{{progressInmune|number:2}}%</span>
                                         </div>
                                         <div id="progressDead" class="progress-bar bg-dark"
                                             ng-style="{'width':progressDead + '%'}">
@@ -222,7 +218,140 @@
                                         </div>
                                     </div>
                                 </td>
-                                </trstyle="color:red">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-12">
+
+                <div class="row">
+                    <div class="col-xl-12 text-center">
+                        <div class="alert alert-secondary" role="alert">
+                            <h2 ng-show="status=='initial'" class="text-center">{{txtReady[language]}}</h2>
+                            <h2 class="text-center" ng-hide="status=='initial'">{{txtDay[language]}}: {{dayCounter}}
+                                <span ng-show="status=='paused'">({{txtPaused[language]}})</span>
+                                <span ng-show="status=='finished'">({{txtFinished[language]}})</span>
+                            </h2>
+                        </div>
+                        <button ng-show="status=='initial'" type="button" class="btn btn-success btn-lg center-block"
+                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtStart[language]}} </button>
+                        <button ng-show="status=='paused'" type="button" class="btn btn-success btn-lg center-block"
+                            id="start" ng-click="start()"> <img src="play.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtContinue[language]}} </button>
+                        <button ng-show="status=='processing'" type="button" class="btn btn-primary btn-lg center-block"
+                            id="stop" ng-click="stop()"> <img src="pause.svg" fill="white" alt="" width="25"
+                                style="filter: invert(1);"> {{txtPause[language]}} </button>
+                        <button ng-show="status=='paused'||status=='finished'" type="button"
+                            class="btn btn-danger btn-lg center-block" id="reset" ng-click="reset()"> <img
+                                src="refresh-ccw.svg" fill="white" alt="" width="20" style="filter: invert(1);">
+                            {{txtReset[language]}} </button>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-12 text-center">
+                        <div style="margin-top:10px">
+                            <label> <input type="radio" ng-model="language" ng-value="0" ng-change="languageChange()">
+                                English
+                            </label>
+                            <label> <input type="radio" ng-model="language" ng-value="1" ng-change="languageChange()">
+                                Español
+                            </label>
+                            <label> <input type="radio" ng-model="language" ng-value="2" ng-change="languageChange()">
+                                Valencià/Cat.
+                            </label>
+                        </div>
+
+                        <div class="col-md-12" data-placement="top" ng-attr-title="{{txtNeighborhoodExp[language]}}"
+                            style="margin-top:20px">
+                            {{txtNeighborhood[language]}}: <span>{{rangeNeighborhood}}
+                                {{txtNeighborhoodUnit[language]}}</span>
+                            <input type="range" class="custom-range" ng-attr-min="{{rangeNeighborhoodMin}}"
+                                ng-attr-max="{{rangeNeighborhoodMax}}" ng-attr-step="{{rangeNeighborhoodStep}}"
+                                ng-model="rangeNeighborhood">
+                        </div>
+
+                        <div class="col-md-12" data-placement="top" ng-attr-title="{{txtDayLengthExp[language]}}"
+                            style="margin-top:20px">
+                            {{txtDayLength[language]}}: <span>{{rangeDayLength}} {{txtDayLengthUnit[language]}}</span>
+                            <input type="range" class="custom-range" ng-attr-min="{{rangeDayLengthMin}}"
+                                ng-attr-max="{{rangeDayLengthMax}}" ng-attr-step="{{rangeDayLengthStep}}"
+                                ng-model="rangeDayLength" ng-disabled="status!='initial'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-12 text-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <canvas id="R0Chart" class="chart chart-line" chart-data="R0ChartData"
+                            chart-labels="R0ChartLabels" chart-series="txtR0ChartSeries[language]"
+                            chart-options="chartOptions" chart-dataset-override="datasetOverride" chart-click="onClick"
+                            height="115">
+                        </canvas>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                            <tr data-placement="top" ng-attr-title="{{txtIncidenceExp[language]}}">
+                                <th scope="row" style="color:rgb(10, 110, 10)">
+                                    <h6>{{txtIncidence[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6>{{incidence|number:2}}%
+                                        <span ng-hide="status=='initial'">MAX:
+                                            {{maxIncidence|number:2}}% ({{txtDayNumber[language]}}
+                                            {{maxIncidenceDay}})</span>
+                                    </h6>
+                                </td>
+                            </tr>
+                            <tr data-placement="top" ng-attr-title="{{txtPrevalenceExp[language]}}">
+                                <th scope="row" style="color:rgb(10, 110, 10)">
+                                    <h6>{{txtPrevalence[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6>{{prevalence| number:2}}%
+                                        <span ng-hide="status=='initial'">MAX:
+                                            {{maxPrevalence|number:2}}% ({{txtDayNumber[language]}}
+                                            {{maxPrevalenceDay}})</span>
+
+                                    </h6>
+                                </td>
+                            </tr>
+                            <tr data-placement="top" ng-attr-title="{{txtR0Exp[language]}}">
+                                <th scope="row" style="color:rgb(10, 110, 10)">
+                                    <h6>{{txtR0[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6>{{R0i| number:2}}</h6>
+                                </td>
+                            </tr>
+                            <tr style="color:rgb(189, 0, 0)" data-placement="top"
+                                ng-attr-title="{{txtSaturationExp[language]}}">
+                                <th scope="row">
+                                    <h6>{{txtSaturation[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6>{{saturation|number:2}}% <span
+                                            ng-show='saturationDay>0'>({{txtDayNumber[language]}}
+                                            {{saturationDay}})</span></h6>
+                                </td>
+                            </tr>
+                            <tr style="color:rgb(0, 0, 0)" data-placement="top"
+                                ng-attr-title="{{txtLethalityExp[language]}}">
+                                <th scope="row">
+                                    <h6>{{txtLethality[language]}}</h6>
+                                </th>
+                                <td class="text-right">
+                                    <h6>{{progressDead|number:2}}%</h6>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -230,52 +359,443 @@
         </div>
 
         <div class="row" style="margin-top:10px">
-
             <div class="col-md-6 text-center">
-                <div class="col-md-12">
-                    {{txtImmunity[language]}}: <span>{{rangeImmunity}} {{txtDays[language]}}</span>
-                    <input type="range" ng-disabled="checkInmunity" class="custom-range" min="0" max="50" step="1"
-                        ng-model="rangeImmunity">
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtInitialExp[language]}}">
+                    {{txtInitial[language]}}: <span>{{rangeInitial}}
+                        {{txtInitialUnit[language]}}</span>
+                    <input type="range" class="custom-range" id="rangeInitial" ng-attr-min="{{rangeInitialMin}}"
+                        ng-attr-max="{{rangeInitialMax}}" ng-attr-step="{{rangeInitialStep}}" ng-model="rangeInitial"
+                        ng-change="reset()" ng-disabled="status!='initial'">
                 </div>
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtIncubationExp[language]}}">
+                    {{txtIncubation[language]}}: <span>{{rangeIncubation}} {{txtIncubationUnit[language]}}</span>
+                    <input type="range" class="custom-range" ng-attr-min="{{rangeIncubationMin}}"
+                        ng-attr-max="{{rangeIncubationMax}}" ng-attr-step="{{rangeIncubationStep}}"
+                        ng-model="rangeIncubation">
+                </div>
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtConvalescenceExp[language]}}">
+                    {{txtConvalescence[language]}}: <span>{{rangeConvalescence}}
+                        {{txtConvalescenceUnit[language]}}</span>
+                    <input type="range" class="custom-range" ng-attr-min="{{rangeConvalescenceMin}}"
+                        ng-attr-max="{{rangeConvalescenceMax}}" ng-attr-step="{{rangeConvalescenceStep}}"
+                        ng-model="rangeConvalescence">
+                </div>
+                <form>
+                    <div class="form-row">
+                        <div class="col-5">
+                            <div class="custom-control custom-checkbox" style="margin-top:20px">
+                                <input type="checkbox" class="custom-control-input" id="checkInmunity"
+                                    ng-model="checkInmunity">
+                                <label class="custom-control-label"
+                                    for="checkInmunity">{{txtTotalImmunity[language]}}</label>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="col-md-12" data-placement="top" ng-attr-title="{{txtImmunityExp[language]}}">
+                                {{txtImmunity[language]}}: <span ng-hide="checkInmunity">{{rangeImmunity}}
+                                    {{txtImmunityUnit[language]}}</span>
+                                <span ng-hide="!checkInmunity">TOTAL</span>
+                                <input type="range" ng-disabled="checkInmunity" class="custom-range"
+                                    ng-attr-min="{{rangeImmunityMin}}" ng-attr-max="{{rangeImmunityMax}}"
+                                    ng-attr-step="{{rangeImmunityStep}}" ng-model="rangeImmunity">
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-                <div class="col-md-12" ng-show="state=='initial'">
-                    {{txtInitial[language]}}: <span id="txtPoblacionInicial">{{rangeInitialInfectedPopulation}}</span>
-                    <input type="range" class="custom-range" id="rangeInitialInfectedPopulation" min="0" max="100"
-                        step="1" ng-model="rangeInitialInfectedPopulation" ng-change="reset()">
-                </div>
-                <div class="col-md-12">
-                    {{txtRecuperation[language]}}: <span id="txtRecuperation">{{rangeRecuperation}}
-                        {{txtDays[language]}}</span>
-                    <input type="range" class="custom-range" id="rangeRecuperation" min="0" max="20" step="1"
-                        ng-model="rangeRecuperation">
-                </div>
-                <div class="col-md-12">
-                    {{txtDeathRate[language]}}: <span>{{rangeMortality}}%</span>
-                    <input type="range" class="custom-range" min="0" max="60" step="0.1" ng-model="rangeMortality">
-                </div>
             </div>
 
             <div class="col-md-6 text-center">
-                <div class="col-md-12">
-                    {{txtNeighborhood[language]}}: <span>{{rangeNeighborhood}}</span>
-                    <input type="range" class="custom-range" min="0" max="5" step="1" ng-model="rangeNeighborhood">
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtContagiousnessExp[language]}}">
+                    {{txtContagiousness[language]}}: <span>{{rangeContagiousness}}
+                        {{txtContagiousnessUnit[language]}}</span>
+                    <input type="range" class="custom-range" ng-attr-min="{{rangeContagiousnessMin}}"
+                        ng-attr-max="{{rangeContagiousnessMax}}" ng-attr-step="{{rangeContagiousnessStep}}"
+                        ng-model="rangeContagiousness">
                 </div>
-                <div class="col-md-12">
-                    {{txtContacts[language]}}: <span id="txtContacts">{{rangeContacts}}</span>
-                    <input type="range" class="custom-range" id="rangeContacts" min="0" max="10" step="1"
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtContactsExp[language]}}">
+                    {{txtContacts[language]}}: <span>{{rangeContacts}} {{txtContactsUnit[language]}}</span>
+                    <input type="range" class="custom-range" id="rangeContacts" ng-attr-min="{{rangeContactsMin}}"
+                        ng-attr-max="{{rangeContactsMax}}" ng-attr-step="{{rangeContactsStep}}"
                         ng-model="rangeContacts">
                 </div>
-                <div class="col-md-12">
-                    {{txtLoad[language]}}: <span>{{rangeContaminationThreshold}}</span>
-                    <input type="range" class="custom-range" min="0" max="50" step="1"
-                        ng-model="rangeContaminationThreshold">
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtDispersionExp[language]}}">
+                    {{txtDispersion[language]}}: <span>{{rangeDispersion}}</span>
+                    <input type="range" class="custom-range" ng-attr-min="{{rangeDispersionMin}}"
+                        ng-attr-max="{{rangeDispersionMax}}" ng-attr-step="{{rangeDispersionStep}}"
+                        ng-model="rangeDispersion">
                 </div>
-                <div class="col-md-12" ng-show="state=='initial'">
-                    {{txtDay[language]}}: <span>{{rangeTickSeconds}}</span>
-                    <input type="range" class="custom-range" min="1" max="5" step="1" ng-model="rangeTickSeconds">
+                <div class="col-md-12" data-placement="top" ng-attr-title="{{txtMortalityExp[language]}}">
+                    {{txtMortality[language]}}: <span>{{rangeMortality}} {{txtMortalityUnit[language]}}</span>
+                    <input type="range" class="custom-range" ng-attr-min="{{rangeMortalityMin}}"
+                        ng-attr-max="{{rangeMortalityMax}}" ng-attr-step="{{rangeMortalityStep}}"
+                        ng-model="rangeMortality">
                 </div>
             </div>
+        </div>
 
+
+
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-12 text-center">
+                <h2 style="font-stretch: extra-expanded;">{{txtPrebuild[language]}}</h2>
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+            <div class="col-lg-12 text-center">
+                <div class="card-deck">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">{{txtPrebuid1[language]}}</h4>
+                            <p class="card-text">{{txtPrebuid1Exp[language]}}</p>
+                            <button ng-click="runConfig('01a')" class="btn btn-primary">01A</button>
+                            <button ng-click="runConfig('01b')" class="btn btn-primary">01B</button>
+                        </div>
+                    </div>
+                    <div class="w-100 d-none d-sm-block d-md-none"></div>
+                    <div class="w-100 d-none d-md-block d-lg-none"></div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">{{txtPrebuid2[language]}}</h4>
+                            <p class="card-text">{{txtPrebuid2Exp[language]}}</p>
+                            <button ng-click="runConfig('02a')" class="btn btn-primary">02A</button>
+                            <button ng-click="runConfig('02b')" class="btn btn-primary">02B</button>
+                            <button ng-click="runConfig('02c')" class="btn btn-primary">02C</button>
+                        </div>
+                    </div>
+                    <div class="w-100 d-none d-sm-block d-md-none"></div>
+                    <div class="w-100 d-none d-md-block d-lg-none"></div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">{{txtPrebuid3[language]}}</h4>
+                            <p class="card-text">{{txtPrebuid3Exp[language]}}</p>
+                            <button ng-click="runConfig('03a')" class="btn btn-primary">03A</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" style="margin-top:10px">
+            <div class="col-md-12 text-center">
+                <h2 style="font-stretch: extra-expanded;">{{txtHelp[language]}}</h2>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+            <div class="col-lg-12 text-center">
+                <div id="accordion">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse50"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtFlatlandRules[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse50" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtFlatlandRulesExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse51"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtEpDescription[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse51" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtEpDescriptionExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse52"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtSpecificIndicators[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse52" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtSpecificIndicatorsExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse53"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtFinalIndicators[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse53" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtFinalIndicatorsExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse7"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtNeighborhood[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse7" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtNeighborhoodExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse10"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtDayLength[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse10" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtDayLengthExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtContagiousness[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse1" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtContagiousnessExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse2"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtIncubation[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtIncubationExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse3"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtConvalescence[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtConvalescenceExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse4"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtImmunity[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtImmunityExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse5"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtMortality[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse5" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtMortalityExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse6"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtInitial[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtInitialExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse8"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtContacts[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse8" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtContactsExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse9"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtDispersion[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse9" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtDispersionExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse11"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtIncidence[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse11" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtIncidenceExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse12"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtPrevalence[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse12" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtPrevalenceExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse13"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtR0[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse13" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtR0Exp[language]}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse14"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtSaturation[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse14" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtSaturationExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse15"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    <h5>{{txtDuration[language]}}</h5>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse15" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{txtDurationExp[language]}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <div class="row" style="margin-top:50px">
@@ -322,13 +842,15 @@
                         <img src="coronavirus.png" alt="coronavirus" width="72" height="72">
                         <p style="margin-top:30px">{{txtModal1[language]}}</p>
                         <p style="text-align: justify">{{txtModal2[language]}}</p>
-                        <p>{{txtModal3[language]}} <a
-                                href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a></p>
-                        <p>{{txtModal4[language]}}</p>
-                        <p>{{txtModal5[language]}} <a
-                                href="https://github.com/rafaelaznar/rafaelaznar.github.io.git">GITHUB</a>
+                        <p>(1) Fallas: <a
+                                href="https://en.wikipedia.org/wiki/Falles">https://en.wikipedia.org/wiki/Falles</a>
                         </p>
-
+                        <p>{{txtModal3[language]}} <a
+                                href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a>
+                        </p>
+                        <p>{{txtModal4[language]}}</p>
+                        <p>{{txtModal5[language]}} <a href="https://github.com/rafaelaznar/quarantine2020">GITHUB</a>
+                        </p>
                     </div>
                 </div>
                 <div class="modal-footer">
