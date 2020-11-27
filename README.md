@@ -1,3 +1,4 @@
 # Quarantine2020
 
-Epidemics simulator.
+[Quarantine2020: Epidemics simulator](https://rafaelaznar.github.io/quarantine2020/ "Epidemics simulator")
+
